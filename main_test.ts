@@ -25,10 +25,19 @@ async function resetDatabase(kv: Deno.Kv) {
 
 Deno.test("Todo API (usinng app.request)", async (t) => {
   Deno.env.set("DENO_ENV", "test");
-  Deno.env.set("BASIC_AUTH_USERNAME", "testuser");
-  Deno.env.set("BASIC_AUTH_PASSWORD", "testpassword");
+  if (!Deno.env.get("BASIC_AUTH_USERNAME")) {
+    Deno.env.set("BASIC_AUTH_USERNAME", "testuser");
+  }
+  if (!Deno.env.get("BASIC_AUTH_PASSWORD")) {
+    Deno.env.set("BASIC_AUTH_PASSWORD", "testpassword");
+  }
   const { app, kv } = await import(`./main.ts?update=${Date.now()}`);
-  const basicAuthHeader = `Basic ${btoa("testuser:testpassword")}`;
+  const basicAuthHeader = `Basic ${
+    btoa(
+      Deno.env.get("BASIC_AUTH_USERNAME") + ":" +
+        Deno.env.get("BASIC_AUTH_PASSWORD"),
+    )
+  }`;
 
   await t.step("GET /todos", async () => {
     await resetDatabase(kv);
