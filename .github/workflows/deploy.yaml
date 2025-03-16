@@ -31,10 +31,10 @@ jobs:
       - name: Run tests
         run: deno test --allow-net --allow-env --allow-read --allow-write
 
-      # - name: Deploy to Deno Deploy
-      #   uses: denoland/deployctl@1.13.1
-      #   with:
-      #     project: paveun-todo
-      #     entrypoint: ./main.ts
-      #     root: .
-      #     token: ${{ secrets.DENO_DEPLOY_TOKEN }}
+      - name: Deploy to Deno Deploy
+        uses: denoland/deployctl@1.13.1
+        with:
+          project: paveun-todo
+          entrypoint: ./main.ts
+          root: .
+          token: ${{ secrets.DENO_DEPLOY_TOKEN }}
