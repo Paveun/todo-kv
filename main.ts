@@ -6,11 +6,16 @@ import "jsr:@std/dotenv/load";
 
 const app = new Hono();
 app.use(logger());
+app.use(cors({
+  origin: "*",
+  allowMethods: ["GET", "POST", "PUT", "DELETE"],
+  allowHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400,
+}));
 app.use(basicAuth({
   username: Deno.env.get("BASIC_AUTH_USERNAME") || "",
   password: Deno.env.get("BASIC_AUTH_PASSWORD") || "",
 }))
-app.use(cors());
 
 const dbPath = Deno.env.get("DENO_ENV") === "test" ? ":memory:" : undefined;
 const kv = await Deno.openKv(dbPath);
