@@ -1,6 +1,7 @@
 import { Hono } from "@hono/hono";
 import { logger } from "@hono/hono/logger"
 import { basicAuth } from "@hono/hono/basic-auth"
+import { cors } from "@hono/hono/cors"
 import "jsr:@std/dotenv/load";
 
 const app = new Hono();
@@ -9,6 +10,7 @@ app.use(basicAuth({
   username: Deno.env.get("BASIC_AUTH_USERNAME") || "",
   password: Deno.env.get("BASIC_AUTH_PASSWORD") || "",
 }))
+app.use(cors());
 
 const dbPath = Deno.env.get("DENO_ENV") === "test" ? ":memory:" : undefined;
 const kv = await Deno.openKv(dbPath);
