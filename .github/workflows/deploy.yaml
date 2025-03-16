@@ -37,4 +37,7 @@ jobs:
           project: paveun-todo
           entrypoint: ./main.ts
           root: .
-          token: ${{ secrets.DENO_DEPLOY_TOKEN }}
+          exclude:
+            flake.lock
+            flake.nix
+            .envrc
