@@ -1,0 +1,40 @@
+name: Deploy to Deno Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.2
+        with:
+          deno-version: v2.x
+
+      - name: Set environment variables
+        run:
+          echo "BASIC_AUTH_USERNAME=${{ secrets.BASIC_AUTH_USERNAME }}" >> $GITHUB_ENV
+          echo "BASIC_AUTH_PASSWORD=${{ secrets.BASIC_AUTH_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: deno test --allow-net --allow-env --allow-read --allow-write
+
+      # - name: Deploy to Deno Deploy
+      #   uses: denoland/deployctl@1.13.1
+      #   with:
+      #     project: paveun-todo
+      #     entrypoint: ./main.ts
+      #     root: .
+      #     token: ${{ secrets.DENO_DEPLOY_TOKEN }}
